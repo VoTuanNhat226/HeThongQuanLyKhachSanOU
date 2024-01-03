@@ -1,0 +1,23 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Trang chủ{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% for r in rooms %}
+        <div class="col-xs-12 col-md-3" style="padding: 8px">
+            <div class="card">
+                <img src="{{ r.image }}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{ r.name }}</h5>
+                    <p class="card-text">{{ r.title }}</p>
+                    <a href="#" class="btn btn-primary">Xem chi tiết</a>
+                    <a href="#" class="btn btn-primary">Đặt phòng</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

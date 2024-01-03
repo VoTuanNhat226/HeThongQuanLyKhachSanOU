@@ -1,0 +1,22 @@
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <div class="container-fluid">
+        <img src="https://cdn.haitrieu.com/wp-content/uploads/2021/09/Logo-DH-Mo-TPHCM-OU.png" style="width: 5%">
+        <a class="navbar-brand" href="#">OU Hotel</a>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Trang chủ</a>
+                </li>
+                {% for t in typeroom %}
+                <li class="nav-item">
+                    <a class="nav-link" href="#">{{t.name}}</a>
+                </li>
+                {% endfor %}
+            </ul>
+            <form class="d-flex" role="search" method="get" action="/">
+                <input class="form-control me-2" type="search" name="kw" placeholder="Tìm theo tên, giá" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Tìm</button>
+            </form>
+        </div>
+    </div>
+</nav>
