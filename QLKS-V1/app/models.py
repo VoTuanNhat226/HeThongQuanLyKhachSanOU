@@ -1,6 +1,31 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, Enum
 from sqlalchemy.orm import relationship
 from app import db
+from flask_login import UserMixin
+import enum
+
+
+class UserRoleEnum(enum.Enum):
+    ADMIN = 1
+    STAFF = 2
+    CUSTOMER = 3
+
+    def __str__(self):
+        return self.name
+
+
+class User(db.Model, UserMixin):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    username = Column(String(50), nullable=False, unique=True)
+    password = Column(String(100), nullable=False)
+    avatar = Column(String(200), default='https://s.net.vn/UqTC')
+    name = Column(String(50), nullable=False)
+    address = Column(String(100), nullable=False)
+    phone = Column(String(100), nullable=False)
+    user_role = Column(Enum(UserRoleEnum), default=UserRoleEnum.STAFF)
+
+    def __str__(self):
+        return self.name
 
 
 class TypeRoom(db.Model):
@@ -8,6 +33,9 @@ class TypeRoom(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(100), nullable=False, unique=True)
     rooms = relationship('Room', backref='typeroom', lazy=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Room(db.Model):
@@ -19,17 +47,56 @@ class Room(db.Model):
     price = Column(Float, default=0)
     typeroom_id = Column(Integer, ForeignKey(TypeRoom.id), nullable=False)
 
+    def __str__(self):
+        return self.name
+
+
 if __name__ == '__main__':
     from app import app
-    with app.app_context():
-        # type1 = TypeRoom(name='Phòng President')
-        # type2 = TypeRoom(name='Phòng Premium')
-        # type3 = TypeRoom(name='Phòng Luxury')
-        # type4 = TypeRoom(name='Phòng Studio')
-        # type5 = TypeRoom(name='Phòng Executive')
-        # db.session.add_all([type1, type2, type3, type4, type5])
-        # db.session.commit()
 
+    with app.app_context():
+        db.create_all()
+        #
+        # #Create user
+        import hashlib
+
+        user1 = User(username='admin',
+                     password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()),
+                     name='Admin',
+                     address='HCM',
+                     phone='0775438404',
+                     user_role=UserRoleEnum.ADMIN)
+        user2 = User(username='quyan',
+                     password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()),
+                     name='QuyAn',
+                     address='Hoc Mon',
+                     phone='0775438505',
+                     user_role=UserRoleEnum.STAFF)
+        user3 = User(username='sonduy',
+                     password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()),
+                     name='SonDuy',
+                     address='Cu Chi',
+                     phone='0775438606',
+                     user_role=UserRoleEnum.STAFF)
+        user4 = User(username='tuannhat',
+                     password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()),
+                     name='TuanNhat',
+                     address='Nha Be',
+                     phone='0977751951',
+                     user_role=UserRoleEnum.STAFF)
+        db.session.add_all([user1, user2, user3, user4])
+        db.session.commit()
+
+        # Create type room
+        type1 = TypeRoom(name='Phòng President')
+        type2 = TypeRoom(name='Phòng Premium')
+        type3 = TypeRoom(name='Phòng Luxury')
+        type4 = TypeRoom(name='Phòng Studio')
+        type5 = TypeRoom(name='Phòng Executive')
+        db.session.add_all([type1, type2, type3, type4, type5])
+        db.session.commit()
+
+        # Create room
         room1 = Room(name='Phòng President Suite Hướng biển',
                      description='THE ROOM FOR THE PRESIDENT, THE HEADS OF STATE',
                      image='https://rosaalbaresort.com/wp-content/uploads/2023/10/RAS3-2048x1365.jpg',
@@ -55,7 +122,5 @@ if __name__ == '__main__':
                      image='https://rosaalbaresort.com/wp-content/uploads/2023/10/ES3-2048x1365.jpg',
                      price=1000000,
                      typeroom_id=5)
-        db.session.add_all([room1, room2, room3, room4, room5])
-        db.session.commit()
-
-        # db.create_all()
+    db.session.add_all([room1, room2, room3, room4, room5])
+    db.session.commit()
