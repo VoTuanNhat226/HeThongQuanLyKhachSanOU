@@ -1,3 +1,5 @@
+<!--Trang rỗng chứa tất cả-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,15 +13,38 @@
             integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
             crossorigin="anonymous"></script>
     <title>{% block title %}{% endblock %}</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+        h1 {
+            font-weight: bold;
+            margin: 0;
+        }
+        p {
+            font-size: 14px;
+            font-weight: 100;
+            line-height: 20px;
+            letter-spacing: 0.5px;
+            margin: 20px 0 30px;
+        }
+        a {
+        color: #333;
+        font-size: 18px;
+        text-decoration: none;
+        margin: 20px 10px;
+        }
+    </style>
 </head>
 <body>
+
 
 {% include 'layout/header.html' %}
 
 {% block content %}
 {% endblock %}
-
-
 
 {% include 'layout/footer.html' %}
 
